@@ -1,6 +1,26 @@
 package de.tello.application.control;
 
+import de.tello.application.model.connection.UDPDroneClient;
+
 public class DroneCommandHandler {
+
+    private UDPDroneClient droneClient;
+    private boolean isConnectionAlive;
+
+    public DroneCommandHandler(String pHostname, int pPort){
+
+        this.droneClient =  new UDPDroneClient(pHostname,pPort);
+        this.isConnectionAlive = false;
+
+    }
+
+
+    public void establishConnectionWithDrone(){
+
+        isConnectionAlive = droneClient.establishConnection();
+    }
+
+
 
 
 

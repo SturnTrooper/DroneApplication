@@ -1,9 +1,9 @@
-package de.tello.application.control;
+package de.tello.application.model.connection;
 
 import java.io.IOException;
 import java.net.*;
 
-public class UDPDroneClient {
+public class UDPDroneStateClient implements UDPDroneClient{
 
     private String hostname;
     private int port;
@@ -12,7 +12,7 @@ public class UDPDroneClient {
     private byte[] sendBuffer;
     private byte[] receiveBuffer;
 
-    public UDPDroneClient(String pHostname, int pPort){
+    public UDPDroneStateClient(String pHostname, int pPort){
 
         this.hostname = pHostname;
         this.port = pPort;
@@ -21,7 +21,9 @@ public class UDPDroneClient {
 
     }
 
-    public boolean establishConnection()  {
+
+    @Override
+    public boolean establishConnection() {
 
         System.out.println("Establish connection with: " + hostname);
 
@@ -42,9 +44,9 @@ public class UDPDroneClient {
         }
 
         return isEstablished;
-
     }
 
+    @Override
     public String executeCommand(String pCommand) throws IOException {
 
         sendBuffer = pCommand.getBytes();
@@ -59,7 +61,5 @@ public class UDPDroneClient {
         String responseMessage = new String(receiveBuffer, 0, response.getLength());
 
         return responseMessage;
-
     }
-
 }
