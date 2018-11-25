@@ -93,7 +93,7 @@ public class TelloVideoStreamListener implements Runnable {
         }
         catch (Exception e)
         {
-            System.err.println("Cannot convert the Mat obejct: " + e);
+            System.err.println("Could not convert the H264 fram to an image!" + e);
             return null;
         }
     }
@@ -110,7 +110,7 @@ public class TelloVideoStreamListener implements Runnable {
      */
     private static BufferedImage createBufferedImage(Mat pOriginal) {
 
-        // init
+
         BufferedImage image = null;
 
         int width = pOriginal.width();
@@ -120,14 +120,15 @@ public class TelloVideoStreamListener implements Runnable {
         byte[] sourcePixels = new byte[width * height * channels];
         pOriginal.get(0, 0, sourcePixels);
 
-        if (pOriginal.channels() > 1)
-        {
+        if (pOriginal.channels() > 1) {
+
             image = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
-        }
-        else
-        {
+
+        }  else {
+
             image = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
         }
+
         final byte[] targetPixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
         System.arraycopy(sourcePixels, 0, targetPixels, 0, sourcePixels.length);
 
