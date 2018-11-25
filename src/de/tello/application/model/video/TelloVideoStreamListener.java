@@ -1,4 +1,4 @@
-package de.tello.application.de.tello.application.model.video;
+package de.tello.application.model.video;
 
 import de.tello.application.view.TelloGraphicalUserInterface;
 import javafx.scene.image.Image;
