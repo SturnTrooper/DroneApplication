@@ -1,15 +1,14 @@
 package de.tello.application.model.video;
 
-import de.tello.application.utils.TelloUtils;
 import de.tello.application.view.TelloGraphicalUserInterface;
 import javafx.application.Platform;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfByte;
-import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.videoio.VideoCapture;
 
-import java.io.ByteArrayInputStream;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
 
 public class TelloVideoStreamListener implements Runnable {
 
@@ -73,14 +72,11 @@ public class TelloVideoStreamListener implements Runnable {
 
         }
 
-        //Manipulation like chainging color of frame can be done here ...
-
         return currentFrame;
     }
 
     /** This function converts the frame to an image, that in turn will be
-     *  shown on the GUI screen. Differennt image types can be choosen (e.g.
-     *  .bmp, .png, .jpeg ...).
+     *  shown on the GUI screen.
      *
      *  @author Florian Sturn
      *  @version 1.0
@@ -91,11 +87,51 @@ public class TelloVideoStreamListener implements Runnable {
      */
     private Image convertFrameToImage(Mat pFrame){
 
-        MatOfByte frameBuffer = new MatOfByte();
-
-        Imgcodecs.imencode(".png", pFrame, frameBuffer);
-        Image imageToShow = new Image(new ByteArrayInputStream(frameBuffer.toArray()));
-
-        return imageToShow;
+        try
+        {
+            return SwingFXUtils.toFXImage(createBufferedImage(pFrame), null);
+        }
+        catch (Exception e)
+        {
+            System.err.println("Cannot convert the Mat obejct: " + e);
+            return null;
+        }
     }
+
+    /** Function to create a buffered image out of the H264 frame. The created image
+     *  will be returned and shown in the graphical user interface.
+     *
+     * @author Florian Sturn
+     * @version 1.0
+     * @date 25.11.2018
+     *
+     * @param pOriginal
+     * @return
+     */
+    private static BufferedImage createBufferedImage(Mat pOriginal) {
+
+        // init
+        BufferedImage image = null;
+
+        int width = pOriginal.width();
+        int height = pOriginal.height();
+        int channels = pOriginal.channels();
+
+        byte[] sourcePixels = new byte[width * height * channels];
+        pOriginal.get(0, 0, sourcePixels);
+
+        if (pOriginal.channels() > 1)
+        {
+            image = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
+        }
+        else
+        {
+            image = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
+        }
+        final byte[] targetPixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
+        System.arraycopy(sourcePixels, 0, targetPixels, 0, sourcePixels.length);
+
+        return image;
+    }
+
 }
