@@ -9,7 +9,7 @@ public class DroneCommandHandler {
 
     public DroneCommandHandler(String pHostname, int pPort){
 
-        this.droneClient =  new UDPDroneClient(pHostname,pPort);
+        //this.droneClient =  new UDPDroneClient(pHostname,pPort);
         this.isConnectionAlive = false;
 
     }
