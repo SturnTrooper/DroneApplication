@@ -1,6 +1,8 @@
 package de.tello.application.model.video;
 
+import de.tello.application.utils.TelloUtils;
 import de.tello.application.view.TelloGraphicalUserInterface;
+import javafx.application.Platform;
 import javafx.scene.image.Image;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
@@ -40,15 +42,14 @@ public class TelloVideoStreamListener implements Runnable {
             Mat videoFrame = obtainVideoFrame();
             Image frameAsImage = convertFrameToImage(videoFrame);
 
+            //TelloUtils.onFXThread(graphicalUserInterface.getVideoFeed(),frameAsImage);
 
+            Platform.runLater(new Runnable() {
+                @Override public void run() {
 
-
-
-
-
-
-
-
+                    graphicalUserInterface.getVideoFeed().setImage(frameAsImage);
+                }
+            });
         }
 
     }
