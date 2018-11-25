@@ -23,7 +23,7 @@ public class TelloGraphicalUserInterface extends Application {
         videoFeed = new ImageView();
         layout.setCenter(videoFeed);
 
-        TelloGraphicalUserInterfaceController controller = new TelloGraphicalUserInterfaceController(this);
+        TelloGraphicalUserInterfaceController controller = new TelloGraphicalUserInterfaceController(this,"192.168.10.1",8889);
 
         Scene scene = new Scene(layout,1920,1080);
         primaryStage.setScene(scene);
