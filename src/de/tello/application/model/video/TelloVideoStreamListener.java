@@ -19,9 +19,12 @@ public class TelloVideoStreamListener implements Runnable {
 
     private VideoCapture videoStream;
 
+    private TelloFaceRecognizer faceRecognizer;
+
     public TelloVideoStreamListener(TelloGraphicalUserInterface pGraphicalUserInferface){
 
         this.graphicalUserInterface = pGraphicalUserInferface;
+        this.faceRecognizer = new TelloFaceRecognizer();
 
         initializeVideoListener();
     }
@@ -70,6 +73,10 @@ public class TelloVideoStreamListener implements Runnable {
 
             videoStream.read(currentFrame);
 
+            if(!currentFrame.empty()){
+                faceRecognizer.detectFaces(currentFrame);
+            }
+
         }
 
         return currentFrame;
@@ -116,6 +123,8 @@ public class TelloVideoStreamListener implements Runnable {
         int width = pOriginal.width();
         int height = pOriginal.height();
         int channels = pOriginal.channels();
+
+        System.out.println("Picture Resolution:" + width + " " + height);
 
         byte[] sourcePixels = new byte[width * height * channels];
         pOriginal.get(0, 0, sourcePixels);
