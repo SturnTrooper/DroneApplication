@@ -23,14 +23,20 @@ public class TelloStateHandler implements Runnable {
 
         try {
 
-            String rawTelloStateData = this.messageQueue.take();
+            if(!this.messageQueue.isEmpty()){
 
-            if(rawTelloStateData != null && !rawTelloStateData.isEmpty()){
+                String rawTelloStateData = this.messageQueue.take();
 
-                Map<String,String> parsedData = parseTelloStateData(rawTelloStateData);
+                if(rawTelloStateData != null && !rawTelloStateData.isEmpty()){
 
-                //Update Battery state
-                updateBatteryState(parsedData.get("bat"));
+                    Map<String,String> parsedData = parseTelloStateData(rawTelloStateData.trim());
+
+                    //Update Battery state
+                    updateBatteryState(parsedData.get("bat"));
+                    //updateAltimeter(parsedData.get("h"));
+
+                }
+
 
             }
 
@@ -53,6 +59,7 @@ public class TelloStateHandler implements Runnable {
 
         for(int i=0; i < dataTuples.length; i++){
 
+
             String[] dataPair = dataTuples[i].split(":");
             String key = dataPair[0];
             String value = dataPair[1];
@@ -70,7 +77,19 @@ public class TelloStateHandler implements Runnable {
      */
     private void updateBatteryState(String pBatteryCharge){
 
+        System.out.println("Update Battery");
+
         this.telloGui.getBattery().updateBatteryReadout(pBatteryCharge);
+
+    }
+
+    private void updateAltimeter(String pAltitude){
+
+        System.out.println(pAltitude);
+
+        double currentAltitude = Double.valueOf(pAltitude) / 100.0;
+
+        this.telloGui.getAltimeter().updateAltitude(currentAltitude);
 
     }
 }

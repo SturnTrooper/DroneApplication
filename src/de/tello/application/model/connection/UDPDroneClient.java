@@ -48,6 +48,22 @@ public class UDPDroneClient {
 
      }
 
+     public DatagramSocket getConnectionSocket(){
+         return this.connectionSocket;
+     }
+
+     public boolean isConnected(){
+         return this.isConnected;
+     }
+
+     public InetAddress getServerAddress(){
+         return this.serverAddress;
+     }
+
+     public int getPort(){
+         return this.port;
+     }
+
     /** Function to send a command to the dji tello drone. The response from the drone (e.g. "OK" or "Error")
      *  will be returned. In case of no drone connection the command will not be executed and an error message
      *  will be returned.

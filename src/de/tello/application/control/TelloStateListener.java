@@ -61,9 +61,5 @@ public class TelloStateListener implements Runnable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        System.out.println("STATE: " + currentDroneState);
-
-
     }
 }

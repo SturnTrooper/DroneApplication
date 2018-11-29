@@ -14,6 +14,10 @@ public class TelloVideoStreamListener implements Runnable {
 
     private static final String SERVER_ADDRESS = "0.0.0.0";
     private static final int SERVER_PORT = 11111;
+    private static final String RECOVERY_MODE = "1";
+    private static final String FIFO_SIZE = "50000000";
+
+    //?overrun_nonfatal=1&fifo_size=50000000
 
     private TelloGraphicalUserInterface graphicalUserInterface;
 
@@ -31,7 +35,8 @@ public class TelloVideoStreamListener implements Runnable {
 
     private void initializeVideoListener(){
 
-        String videoAddress = "udp://" + SERVER_ADDRESS + ":" + String.valueOf(SERVER_PORT);
+        String parameter = "?overrun_nonfatal=" + RECOVERY_MODE + "&fifo_size=" + FIFO_SIZE;
+        String videoAddress = "udp://" + SERVER_ADDRESS + ":" + String.valueOf(SERVER_PORT) + parameter;
         videoStream = new VideoCapture(videoAddress);
 
     }
@@ -123,8 +128,6 @@ public class TelloVideoStreamListener implements Runnable {
         int width = pOriginal.width();
         int height = pOriginal.height();
         int channels = pOriginal.channels();
-
-        System.out.println("Picture Resolution:" + width + " " + height);
 
         byte[] sourcePixels = new byte[width * height * channels];
         pOriginal.get(0, 0, sourcePixels);

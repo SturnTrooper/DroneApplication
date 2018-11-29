@@ -29,9 +29,9 @@ public class TelloBattery extends Region {
         this.pane = new Pane();
 
         this.batteryChargeLevel = new Rectangle();
-        this.batteryRectangleWidth = new SimpleDoubleProperty(0.295 * 70.0);
+        this.batteryRectangleWidth = new SimpleDoubleProperty(29.5);
 
-        this.conversionFactor = BATTERY_READOUT_SIZE - MODEL_STROKE_WIDTH - MODEL_STROKE_WIDTH;
+        this.conversionFactor = (BATTERY_READOUT_SIZE - MODEL_STROKE_WIDTH - MODEL_STROKE_WIDTH) / 100.0;
 
         initializeGraphicalComponents();
 
@@ -44,10 +44,16 @@ public class TelloBattery extends Region {
 
         SVGPath batteryModel = new SVGPath();
         batteryModel.setContent(BATTERY_MODEL);
+        batteryModel.setStroke(Color.WHITE);
+        batteryModel.setFill(Color.WHITE);
+        batteryModel.setOpacity(0.4);
         //33.5 = 100 %->  33.5 - 2 - 2 = 29.5 -> 0.295
         //2px links rechts
         batteryChargeLevel.widthProperty().bind(batteryRectangleWidth);
-        batteryChargeLevel.setHeight(25.0);
+        batteryChargeLevel.setHeight(21.0);
+        batteryChargeLevel.setTranslateX(2.0);
+        batteryChargeLevel.setTranslateY(2.0);
+        batteryChargeLevel.setOpacity(0.4);
 
         //#5BC236
         batteryChargeLevel.setFill(Color.web("#5BC236"));
@@ -80,7 +86,9 @@ public class TelloBattery extends Region {
     public void updateBatteryReadout(String pBatteryCharge){
 
         double chargeInPercent = Double.valueOf(pBatteryCharge);
+        System.out.println("Double: " + chargeInPercent);
         double rectAngleWidth = chargeInPercent * conversionFactor;
+        System.out.println("Width: " + rectAngleWidth);
 
         if(rectAngleWidth < batteryRectangleWidth.getValue()){
 
@@ -90,6 +98,7 @@ public class TelloBattery extends Region {
                     batteryRectangleWidth.set(rectAngleWidth);
 
                     batteryChargeLevel.setFill(determineBatteryChargeColor(chargeInPercent));
+                    System.out.println("DONE!");
 
                 }
             });
